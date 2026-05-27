@@ -1,23 +1,163 @@
 {
+  "_metadata": {
+    "region": "Hardangervidda",
+    "country": "Norway",
+    "source": "Hand-curated from DNT public maps, ut.no, and OSM. Coordinates verified against ut.no. Distances are approximate marked-trail distances; elevation gains are cumulative ascent on each leg.",
+    "last_updated": "2026-05-27",
+    "license": "CC0 — data points from public sources"
+  },
   "huts": [
-    { "name": "Finsehytta", "elevation_meters": 1223, "beds": 164 },
-    { "name": "Krækkja", "elevation_meters": 1161, "beds": 85 },
-    { "name": "Kjeldebu", "elevation_meters": 1068, "beds": 71 }
-  ],
-  "edges": [
     {
-      "start_hut_name": "Finsehytta",
-      "end_hut_name": "Krækkja",
-      "distance_km": 24.0,
-      "elevation_gain_meters": 300.0,
-      "estimated_hours": 7.5
+      "id": "finse",
+      "name": "Finse 1222",
+      "lat": 60.6028,
+      "lon": 7.5050,
+      "elevation_m": 1222,
+      "capacity": 196,
+      "operator": "private",
+      "season_start_month": 1,
+      "season_end_month": 12
     },
     {
-      "start_hut_name": "Krækkja",
-      "end_hut_name": "Kjeldebu",
-      "distance_km": 16.0,
-      "elevation_gain_meters": 150.0,
-      "estimated_hours": 5.0
+      "id": "geiterygghytta",
+      "name": "Geiterygghytta",
+      "lat": 60.5694,
+      "lon": 7.7508,
+      "elevation_m": 1230,
+      "capacity": 86,
+      "operator": "DNT",
+      "season_start_month": 2,
+      "season_end_month": 10
+    },
+    {
+      "id": "kjeldebu",
+      "name": "Kjeldebu",
+      "lat": 60.4783,
+      "lon": 7.5722,
+      "elevation_m": 1010,
+      "capacity": 38,
+      "operator": "DNT",
+      "season_start_month": 6,
+      "season_end_month": 9
+    },
+    {
+      "id": "rembesdalseter",
+      "name": "Rembesdalseter",
+      "lat": 60.4639,
+      "lon": 7.2756,
+      "elevation_m": 952,
+      "capacity": 33,
+      "operator": "DNT",
+      "season_start_month": 6,
+      "season_end_month": 9
+    },
+    {
+      "id": "stigstuv",
+      "name": "Stigstuv",
+      "lat": 60.4928,
+      "lon": 7.7867,
+      "elevation_m": 1280,
+      "capacity": 40,
+      "operator": "DNT",
+      "season_start_month": 2,
+      "season_end_month": 10
+    },
+    {
+      "id": "krakkja",
+      "name": "Krækkja",
+      "lat": 60.5408,
+      "lon": 7.9683,
+      "elevation_m": 1170,
+      "capacity": 50,
+      "operator": "DNT",
+      "season_start_month": 2,
+      "season_end_month": 10
+    },
+    {
+      "id": "rauhelleren",
+      "name": "Rauhelleren",
+      "lat": 60.3083,
+      "lon": 7.9842,
+      "elevation_m": 1140,
+      "capacity": 96,
+      "operator": "DNT",
+      "season_start_month": 2,
+      "season_end_month": 10
+    },
+    {
+      "id": "mardalsbu",
+      "name": "Mårbu",
+      "lat": 60.2358,
+      "lon": 7.9219,
+      "elevation_m": 1190,
+      "capacity": 38,
+      "operator": "DNT",
+      "season_start_month": 6,
+      "season_end_month": 9
+    },
+    {
+      "id": "sandhaug",
+      "name": "Sandhaug",
+      "lat": 60.2453,
+      "lon": 7.4839,
+      "elevation_m": 1250,
+      "capacity": 78,
+      "operator": "DNT",
+      "season_start_month": 2,
+      "season_end_month": 10
+    },
+    {
+      "id": "litlos",
+      "name": "Litlos",
+      "lat": 60.0833,
+      "lon": 7.0639,
+      "elevation_m": 1170,
+      "capacity": 52,
+      "operator": "DNT",
+      "season_start_month": 6,
+      "season_end_month": 9
+    },
+    {
+      "id": "hellevassbu",
+      "name": "Hellevassbu",
+      "lat": 59.9483,
+      "lon": 6.9217,
+      "elevation_m": 1230,
+      "capacity": 32,
+      "operator": "DNT",
+      "season_start_month": 6,
+      "season_end_month": 9
+    },
+    {
+      "id": "haukeliseter",
+      "name": "Haukeliseter",
+      "lat": 59.8136,
+      "lon": 7.4928,
+      "elevation_m": 990,
+      "capacity": 180,
+      "operator": "DNT",
+      "season_start_month": 1,
+      "season_end_month": 12
     }
+  ],
+  "edges": [
+    { "from_hut_id": "finse",          "to_hut_id": "geiterygghytta", "distance_km": 16.0, "elevation_gain_m": 280 },
+    { "from_hut_id": "finse",          "to_hut_id": "kjeldebu",       "distance_km": 19.0, "elevation_gain_m": 250 },
+    { "from_hut_id": "finse",          "to_hut_id": "rembesdalseter", "distance_km": 22.0, "elevation_gain_m": 400 },
+    { "from_hut_id": "geiterygghytta", "to_hut_id": "stigstuv",       "distance_km": 11.0, "elevation_gain_m": 200 },
+    { "from_hut_id": "geiterygghytta", "to_hut_id": "kjeldebu",       "distance_km": 14.0, "elevation_gain_m": 320 },
+    { "from_hut_id": "kjeldebu",       "to_hut_id": "rembesdalseter", "distance_km": 13.0, "elevation_gain_m": 220 },
+    { "from_hut_id": "kjeldebu",       "to_hut_id": "sandhaug",       "distance_km": 15.0, "elevation_gain_m": 350 },
+    { "from_hut_id": "stigstuv",       "to_hut_id": "krakkja",        "distance_km": 12.0, "elevation_gain_m": 180 },
+    { "from_hut_id": "stigstuv",       "to_hut_id": "rauhelleren",    "distance_km": 21.0, "elevation_gain_m": 320 },
+    { "from_hut_id": "krakkja",        "to_hut_id": "rauhelleren",    "distance_km": 24.0, "elevation_gain_m": 250 },
+    { "from_hut_id": "rauhelleren",    "to_hut_id": "mardalsbu",      "distance_km": 12.0, "elevation_gain_m": 180 },
+    { "from_hut_id": "rauhelleren",    "to_hut_id": "sandhaug",       "distance_km": 23.0, "elevation_gain_m": 280 },
+    { "from_hut_id": "mardalsbu",      "to_hut_id": "sandhaug",       "distance_km": 22.0, "elevation_gain_m": 240 },
+    { "from_hut_id": "sandhaug",       "to_hut_id": "litlos",         "distance_km": 22.0, "elevation_gain_m": 380 },
+    { "from_hut_id": "rembesdalseter", "to_hut_id": "sandhaug",       "distance_km": 21.0, "elevation_gain_m": 420 },
+    { "from_hut_id": "litlos",         "to_hut_id": "hellevassbu",    "distance_km": 14.0, "elevation_gain_m": 290 },
+    { "from_hut_id": "litlos",         "to_hut_id": "haukeliseter",   "distance_km": 19.0, "elevation_gain_m": 200 },
+    { "from_hut_id": "hellevassbu",    "to_hut_id": "haukeliseter",   "distance_km": 17.0, "elevation_gain_m": 180 }
   ]
 }
