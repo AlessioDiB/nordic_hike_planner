@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from nordic_hike_planner.planner import AStarPlanner, PathNotFoundError
+from nordic_hike_planner.planner import AStarPlanner
 from nordic_hike_planner.repository import JsonHutRepository
 
 

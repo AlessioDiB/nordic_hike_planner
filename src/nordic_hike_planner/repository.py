@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from nordic_hike_planner.models import Hut, Edge
+from nordic_hike_planner.models import Edge, Hut
 
 
 class JsonHutRepository:
@@ -10,7 +10,7 @@ class JsonHutRepository:
 
     def _load_data(self) -> dict:
         """Opens and reads the JSON file."""
-        with open(self.data_path, "r", encoding="utf-8") as f:
+        with open(self.data_path, encoding="utf-8") as f:
             return json.load(f)
 
     def get_huts(self) -> list[Hut]:

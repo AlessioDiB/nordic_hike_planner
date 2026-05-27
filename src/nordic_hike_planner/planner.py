@@ -1,6 +1,6 @@
 import heapq
-from typing import Dict, List, Tuple
 
+from nordic_hike_planner.calculator import NaismithCalculator
 from nordic_hike_planner.models import Edge, Hut
 from nordic_hike_planner.repository import JsonHutRepository
 
@@ -13,8 +13,8 @@ class PathNotFoundError(Exception):
 class AStarPlanner:
     def __init__(self, repository: JsonHutRepository) -> None:
         # 1. Grab the raw data
-        self.huts: Dict[str, Hut] = {hut.name: hut for hut in repository.get_huts()}
-        self.edges: Dict[str, List[Edge]] = {hut.name: [] for hut in self.huts.values()}
+        self.huts: dict[str, Hut] = {hut.name: hut for hut in repository.get_huts()}
+        self.edges: dict[str, list[Edge]] = {hut.name: [] for hut in self.huts.values()}
 
         # 2. Build the two-way trail network (the Graph)
         for edge in repository.get_edges():
@@ -29,7 +29,7 @@ class AStarPlanner:
             )
             self.edges[edge.end_hut_name].append(reverse_edge)
 
-    def find_best_route(self, start: str, target: str) -> Tuple[List[str], float, float]:
+    def find_best_route(self, start: str, target: str) -> tuple[list[str], float, float]:
         """
         Calculates the fastest route.
         Returns: (List of hut names, total distance in km, total estimated hours).
@@ -57,8 +57,10 @@ class AStarPlanner:
             for edge in self.edges.get(current_hut, []):
                 next_hut = edge.end_hut_name
                 if next_hut not in visited:
-                    new_hours = current_hours + edge.estimated_hours
+                    # Use existing hours if present, otherwise calculate via Naismith
+                    hours = edge.estimated_hours or NaismithCalculator.calculate_hours(edge)
+                    new_hours = current_hours + hours
                     new_distance = current_distance + edge.distance_km
-                    heapq.heappush(queue, (new_hours, next_hut, path + [next_hut], new_distance))
-
+                    heapq.heappush(queue, (new_hours, next_hut, [*path, next_hut], new_distance))
+                    
         raise PathNotFoundError(f"No valid trail found connecting {start} and {target}")
