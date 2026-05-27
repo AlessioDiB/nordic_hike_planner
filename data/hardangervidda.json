@@ -1,0 +1,33 @@
+{
+  "huts": [
+    {
+      "name": "Finsehytta",
+      "elevation_meters": 1223,
+      "beds": 164
+    },
+    {
+      "name": "Krækkja",
+      "elevation_meters": 1161,
+      "beds": 85
+    },
+    {
+      "name": "Kjeldebu",
+      "elevation_meters": 1068,
+      "beds": 71
+    }
+  ],
+  "edges": [
+    {
+      "start_hut_name": "Finsehytta",
+      "end_hut_name": "Krækkja",
+      "distance_km": 24.0,
+      "estimated_hours": 7.5
+    },
+    {
+      "start_hut_name": "Krækkja",
+      "end_hut_name": "Kjeldebu",
+      "distance_km": 16.0,
+      "estimated_hours": 5.0
+    }
+  ]
+}
