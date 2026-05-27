@@ -1,0 +1,35 @@
+{
+  "_metadata": {
+    "region": "Test Region",
+    "note": "Synthetic dataset for unit tests. Distances and elevations chosen for deterministic test outcomes."
+  },
+  "huts": [
+    {
+      "id": "a", "name": "Hut A", "lat": 60.0, "lon": 7.0, "elevation_m": 1000,
+      "capacity": 20, "operator": "test",
+      "season_start_month": 1, "season_end_month": 12
+    },
+    {
+      "id": "b", "name": "Hut B", "lat": 60.1, "lon": 7.1, "elevation_m": 1100,
+      "capacity": 20, "operator": "test",
+      "season_start_month": 1, "season_end_month": 12
+    },
+    {
+      "id": "c", "name": "Hut C", "lat": 60.2, "lon": 7.2, "elevation_m": 1200,
+      "capacity": 20, "operator": "test",
+      "season_start_month": 1, "season_end_month": 12
+    },
+    {
+      "id": "d", "name": "Hut D", "lat": 60.3, "lon": 7.3, "elevation_m": 900,
+      "capacity": 20, "operator": "test",
+      "season_start_month": 6, "season_end_month": 9
+    }
+  ],
+  "edges": [
+    { "from_hut_id": "a", "to_hut_id": "b", "distance_km": 10.0, "elevation_gain_m": 100 },
+    { "from_hut_id": "b", "to_hut_id": "c", "distance_km": 10.0, "elevation_gain_m": 100 },
+    { "from_hut_id": "a", "to_hut_id": "c", "distance_km": 25.0, "elevation_gain_m": 200 },
+    { "from_hut_id": "c", "to_hut_id": "d", "distance_km": 10.0, "elevation_gain_m": 0   },
+    { "from_hut_id": "b", "to_hut_id": "d", "distance_km": 15.0, "elevation_gain_m": 50  }
+  ]
+}
