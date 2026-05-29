@@ -1,0 +1,1 @@
+Running on Windows: the Makefile uses GNU Make. On Windows, run the commands directly (e.g. pytest instead of make test), or install GNU Make via Chocolatey.
