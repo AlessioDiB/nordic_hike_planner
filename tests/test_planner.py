@@ -46,6 +46,13 @@ class TestPlanRequest:
                 target_km_per_day=30.0, max_km_per_day=25.0,
             )
 
+    def test_max_below_target_rejected_with_only_max_set(self) -> None:
+        """Setting max below default target should raise — this is a real
+        contradiction users could hit if they only override max."""
+        with pytest.raises(ValueError, match="cannot exceed"):
+            PlanRequest(start_hut_id="finse", days=3, max_km_per_day=5.0)
+
+
 
 class TestGreatCircleDistance:
     def test_zero_for_same_point(self) -> None:
@@ -124,7 +131,12 @@ class TestPlannerConstraints:
         # All tiny-dataset edges are ≥10 km. Max of 5 km/day → no valid plan.
         with pytest.raises(PlanningError):
             tiny_planner.plan(
-                PlanRequest(start_hut_id="a", days=2, max_km_per_day=5.0)
+                PlanRequest(
+                    start_hut_id="a",
+                    days=2,
+                    max_km_per_day=5.0,
+                    target_km_per_day=4.0,
+                )
             )
 
     def test_unreachable_goal_raises(self, tiny_planner: AStarPlanner) -> None:
