@@ -1,5 +1,6 @@
 """Tests for the FastAPI service."""
 
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
@@ -12,17 +13,23 @@ HARDANGERVIDDA = Path("data/hardangervidda.json")
 
 
 @pytest.fixture
-def client_real() -> TestClient:
-    """Client backed by the real Hardangervidda dataset."""
+def client_real() -> Iterator[TestClient]:
+    """Client backed by the real Hardangervidda dataset.
+
+    Used as a context manager so the lifespan runs (loading the data,
+    initialising the planner) before tests, and tears down cleanly after.
+    """
     app.state.data_path = HARDANGERVIDDA
-    return TestClient(app)
+    with TestClient(app) as client:
+        yield client
 
 
 @pytest.fixture
-def client_tiny() -> TestClient:
+def client_tiny() -> Iterator[TestClient]:
     """Client backed by the tiny test dataset."""
     app.state.data_path = TINY_DATASET
-    return TestClient(app)
+    with TestClient(app) as client:
+        yield client
 
 
 class TestHealth:
