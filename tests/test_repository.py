@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pytest
 
-from nordic_hike_planner.models import Edge, Hut
 from nordic_hike_planner.repository import JsonHutRepository, RepositoryError
 
 TINY_DATASET = Path("tests/data/tiny_test_dataset.json")
@@ -49,10 +48,15 @@ class TestLoading:
         dataset = {
             "huts": [
                 {
-                    "id": "lonely", "name": "Lonely Hut",
-                    "lat": 60.0, "lon": 7.0, "elevation_m": 1000,
-                    "capacity": 10, "operator": "test",
-                    "season_start_month": 1, "season_end_month": 12,
+                    "id": "lonely",
+                    "name": "Lonely Hut",
+                    "lat": 60.0,
+                    "lon": 7.0,
+                    "elevation_m": 1000,
+                    "capacity": 10,
+                    "operator": "test",
+                    "season_start_month": 1,
+                    "season_end_month": 12,
                 }
             ],
             "edges": [],
@@ -85,10 +89,15 @@ class TestFailureModes:
 
     def test_duplicate_hut_id_raises(self, tmp_path: Path) -> None:
         hut = {
-            "id": "dup", "name": "Dup",
-            "lat": 60.0, "lon": 7.0, "elevation_m": 1000,
-            "capacity": 10, "operator": "test",
-            "season_start_month": 1, "season_end_month": 12,
+            "id": "dup",
+            "name": "Dup",
+            "lat": 60.0,
+            "lon": 7.0,
+            "elevation_m": 1000,
+            "capacity": 10,
+            "operator": "test",
+            "season_start_month": 1,
+            "season_end_month": 12,
         }
         dataset = {"huts": [hut, hut], "edges": []}
         path = tmp_path / "dup.json"
@@ -100,16 +109,23 @@ class TestFailureModes:
         dataset = {
             "huts": [
                 {
-                    "id": "a", "name": "A",
-                    "lat": 60.0, "lon": 7.0, "elevation_m": 1000,
-                    "capacity": 10, "operator": "test",
-                    "season_start_month": 1, "season_end_month": 12,
+                    "id": "a",
+                    "name": "A",
+                    "lat": 60.0,
+                    "lon": 7.0,
+                    "elevation_m": 1000,
+                    "capacity": 10,
+                    "operator": "test",
+                    "season_start_month": 1,
+                    "season_end_month": 12,
                 }
             ],
             "edges": [
                 {
-                    "from_hut_id": "a", "to_hut_id": "ghost",
-                    "distance_km": 5.0, "elevation_gain_m": 100,
+                    "from_hut_id": "a",
+                    "to_hut_id": "ghost",
+                    "distance_km": 5.0,
+                    "elevation_gain_m": 100,
                 }
             ],
         }

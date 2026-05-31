@@ -39,35 +39,41 @@ def plan(
     start: Annotated[
         str,
         typer.Option(
-            "--start", "-s",
+            "--start",
+            "-s",
             help="ID of the starting hut (e.g. 'finse').",
         ),
     ],
     days: Annotated[
         int,
         typer.Option(
-            "--days", "-d",
-            min=1, max=14,
-            help="Number of days to walk (1–14).",
+            "--days",
+            "-d",
+            min=1,
+            max=14,
+            help="Number of days to walk (1-14).",
         ),
     ],
     goal: Annotated[
         str | None,
         typer.Option(
-            "--goal", "-g",
+            "--goal",
+            "-g",
             help="ID of the ending hut. If omitted, the planner picks one.",
         ),
     ] = None,
     max_km: Annotated[
         float,
         typer.Option(
-            "--max-km", help="Maximum km per day.",
+            "--max-km",
+            help="Maximum km per day.",
         ),
     ] = 25.0,
     target_km: Annotated[
         float,
         typer.Option(
-            "--target-km", help="Preferred km per day.",
+            "--target-km",
+            help="Preferred km per day.",
         ),
     ] = 18.0,
     elevation_weight: Annotated[

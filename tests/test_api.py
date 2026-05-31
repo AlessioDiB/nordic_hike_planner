@@ -82,9 +82,7 @@ class TestPlanEndpoint:
         )
         assert response.status_code == 422
 
-    def test_contradictory_constraints_returns_422(
-        self, client_real: TestClient
-    ) -> None:
+    def test_contradictory_constraints_returns_422(self, client_real: TestClient) -> None:
         # target_km_per_day > max_km_per_day
         response = client_real.post(
             "/plan",
@@ -106,8 +104,6 @@ class TestPlanEndpoint:
         )
         assert response.status_code == 422
 
-    def test_missing_required_field_returns_422(
-        self, client_real: TestClient
-    ) -> None:
+    def test_missing_required_field_returns_422(self, client_real: TestClient) -> None:
         response = client_real.post("/plan", json={"start_hut_id": "finse"})
         assert response.status_code == 422

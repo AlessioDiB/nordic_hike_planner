@@ -9,18 +9,30 @@ from nordic_hike_planner.models import DayPlan, Edge, Hut, Trip
 @pytest.fixture
 def hut_a() -> Hut:
     return Hut(
-        id="a", name="Hut A", lat=60.0, lon=7.0,
-        elevation_m=1000, capacity=20, operator="test",
-        season_start_month=1, season_end_month=12,
+        id="a",
+        name="Hut A",
+        lat=60.0,
+        lon=7.0,
+        elevation_m=1000,
+        capacity=20,
+        operator="test",
+        season_start_month=1,
+        season_end_month=12,
     )
 
 
 @pytest.fixture
 def hut_b() -> Hut:
     return Hut(
-        id="b", name="Hut B", lat=60.1, lon=7.1,
-        elevation_m=1100, capacity=20, operator="test",
-        season_start_month=1, season_end_month=12,
+        id="b",
+        name="Hut B",
+        lat=60.1,
+        lon=7.1,
+        elevation_m=1100,
+        capacity=20,
+        operator="test",
+        season_start_month=1,
+        season_end_month=12,
     )
 
 
@@ -32,9 +44,15 @@ class TestHut:
     def test_invalid_latitude_rejected(self) -> None:
         with pytest.raises(ValidationError):
             Hut(
-                id="a", name="A", lat=91.0, lon=0.0,
-                elevation_m=0, capacity=0, operator="x",
-                season_start_month=1, season_end_month=12,
+                id="a",
+                name="A",
+                lat=91.0,
+                lon=0.0,
+                elevation_m=0,
+                capacity=0,
+                operator="x",
+                season_start_month=1,
+                season_end_month=12,
             )
 
     def test_immutable(self, hut_a: Hut) -> None:
@@ -67,14 +85,19 @@ class TestEdge:
 class TestTrip:
     def _make_day(self, n: int, start: Hut, end: Hut) -> DayPlan:
         return DayPlan(
-            day_number=n, start_hut=start, end_hut=end,
-            distance_km=10.0, elevation_gain_m=100, estimated_hours=3.0,
+            day_number=n,
+            start_hut=start,
+            end_hut=end,
+            distance_km=10.0,
+            elevation_gain_m=100,
+            estimated_hours=3.0,
         )
 
     def test_valid_trip(self, hut_a: Hut, hut_b: Hut) -> None:
         trip = Trip(
             days=[self._make_day(1, hut_a, hut_b)],
-            total_distance_km=10.0, total_elevation_gain_m=100,
+            total_distance_km=10.0,
+            total_elevation_gain_m=100,
             total_estimated_hours=3.0,
         )
         assert len(trip.days) == 1
@@ -86,7 +109,8 @@ class TestTrip:
         with pytest.raises(ValidationError, match="day 1 ended"):
             Trip(
                 days=[day1, day2],
-                total_distance_km=20.0, total_elevation_gain_m=200,
+                total_distance_km=20.0,
+                total_elevation_gain_m=200,
                 total_estimated_hours=6.0,
             )
 
@@ -96,6 +120,7 @@ class TestTrip:
         with pytest.raises(ValidationError, match="sequential"):
             Trip(
                 days=[day1, day3],
-                total_distance_km=20.0, total_elevation_gain_m=200,
+                total_distance_km=20.0,
+                total_elevation_gain_m=200,
                 total_estimated_hours=6.0,
             )

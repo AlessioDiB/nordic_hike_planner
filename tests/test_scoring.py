@@ -44,33 +44,27 @@ class TestNaismithHours:
         distance=st.floats(min_value=0.0, max_value=100.0, allow_nan=False),
         ascent=st.integers(min_value=0, max_value=3000),
     )
-    def test_naismith_is_monotonic_in_distance(
-        self, distance: float, ascent: int
-    ) -> None:
+    def test_naismith_is_monotonic_in_distance(self, distance: float, ascent: int) -> None:
         """Adding distance never decreases the time estimate."""
-        assert naismith_hours(distance + 1.0, ascent) >= naismith_hours(
-            distance, ascent
-        )
+        assert naismith_hours(distance + 1.0, ascent) >= naismith_hours(distance, ascent)
 
     @given(
         distance=st.floats(min_value=0.0, max_value=100.0, allow_nan=False),
         ascent=st.integers(min_value=0, max_value=3000),
     )
-    def test_naismith_is_monotonic_in_ascent(
-        self, distance: float, ascent: int
-    ) -> None:
+    def test_naismith_is_monotonic_in_ascent(self, distance: float, ascent: int) -> None:
         """Adding ascent never decreases the time estimate."""
-        assert naismith_hours(distance, ascent + 100) >= naismith_hours(
-            distance, ascent
-        )
+        assert naismith_hours(distance, ascent + 100) >= naismith_hours(distance, ascent)
 
 
 class TestEdgeCost:
     @pytest.fixture
     def edge(self) -> Edge:
         return Edge(
-            from_hut_id="a", to_hut_id="b",
-            distance_km=10.0, elevation_gain_m=500,
+            from_hut_id="a",
+            to_hut_id="b",
+            distance_km=10.0,
+            elevation_gain_m=500,
         )
 
     def test_default_weight_matches_constant(self, edge: Edge) -> None:
@@ -81,8 +75,10 @@ class TestEdgeCost:
 
     def test_flat_edge_cost_equals_distance(self) -> None:
         flat = Edge(
-            from_hut_id="a", to_hut_id="b",
-            distance_km=15.0, elevation_gain_m=0,
+            from_hut_id="a",
+            to_hut_id="b",
+            distance_km=15.0,
+            elevation_gain_m=0,
         )
         assert edge_cost(flat) == pytest.approx(15.0)
 
@@ -109,13 +105,13 @@ class TestEdgeCost:
         ascent=st.integers(min_value=0, max_value=3000),
         weight=st.floats(min_value=0.0, max_value=20.0, allow_nan=False),
     )
-    def test_cost_is_non_negative(
-        self, distance: float, ascent: int, weight: float
-    ) -> None:
+    def test_cost_is_non_negative(self, distance: float, ascent: int, weight: float) -> None:
         """Cost can never be negative for valid inputs."""
         edge = Edge(
-            from_hut_id="a", to_hut_id="b",
-            distance_km=distance, elevation_gain_m=ascent,
+            from_hut_id="a",
+            to_hut_id="b",
+            distance_km=distance,
+            elevation_gain_m=ascent,
         )
         assert edge_cost(edge, weight) >= 0.0
         assert math.isfinite(edge_cost(edge, weight))

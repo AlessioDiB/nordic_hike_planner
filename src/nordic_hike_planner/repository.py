@@ -90,13 +90,9 @@ class JsonHutRepository:
         # Build the adjacency map, treating each edge as bidirectional
         for edge in edges:
             if edge.from_hut_id not in self._huts:
-                raise RepositoryError(
-                    f"Edge references unknown hut: {edge.from_hut_id}"
-                )
+                raise RepositoryError(f"Edge references unknown hut: {edge.from_hut_id}")
             if edge.to_hut_id not in self._huts:
-                raise RepositoryError(
-                    f"Edge references unknown hut: {edge.to_hut_id}"
-                )
+                raise RepositoryError(f"Edge references unknown hut: {edge.to_hut_id}")
 
             from_hut = self._huts[edge.from_hut_id]
             to_hut = self._huts[edge.to_hut_id]

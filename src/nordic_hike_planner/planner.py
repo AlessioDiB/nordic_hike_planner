@@ -51,13 +51,9 @@ class PlanRequest:
         if self.days < 1:
             raise ValueError(f"days must be >= 1, got {self.days}")
         if self.max_km_per_day <= 0:
-            raise ValueError(
-                f"max_km_per_day must be positive, got {self.max_km_per_day}"
-            )
+            raise ValueError(f"max_km_per_day must be positive, got {self.max_km_per_day}")
         if self.target_km_per_day <= 0:
-            raise ValueError(
-                f"target_km_per_day must be positive, got {self.target_km_per_day}"
-            )
+            raise ValueError(f"target_km_per_day must be positive, got {self.target_km_per_day}")
         if self.target_km_per_day > self.max_km_per_day:
             raise ValueError(
                 "target_km_per_day cannot exceed max_km_per_day "
@@ -116,9 +112,7 @@ class AStarPlanner:
         """
         start_hut = self._repo.get_hut(request.start_hut_id)
         goal_hut = (
-            self._repo.get_hut(request.goal_hut_id)
-            if request.goal_hut_id is not None
-            else None
+            self._repo.get_hut(request.goal_hut_id) if request.goal_hut_id is not None else None
         )
 
         # Initial node: at the start hut, on day 0 (i.e. zero days walked).
@@ -188,8 +182,8 @@ class AStarPlanner:
                     g_score=new_g,
                     hut=neighbour_hut,
                     day=current.day + 1,
-                    path=current.path + (neighbour_hut,),
-                    edges=current.edges + (edge,),
+                    path=(*current.path, neighbour_hut),
+                    edges=(*current.edges, edge),
                 )
                 heapq.heappush(frontier, neighbour_node)
 
@@ -231,9 +225,7 @@ class AStarPlanner:
                     end_hut=end_hut,
                     distance_km=edge.distance_km,
                     elevation_gain_m=edge.elevation_gain_m,
-                    estimated_hours=naismith_hours(
-                        edge.distance_km, edge.elevation_gain_m
-                    ),
+                    estimated_hours=naismith_hours(edge.distance_km, edge.elevation_gain_m),
                 )
             )
 

@@ -42,8 +42,10 @@ class TestPlanRequest:
     def test_target_exceeding_max_rejected(self) -> None:
         with pytest.raises(ValueError, match="cannot exceed"):
             PlanRequest(
-                start_hut_id="finse", days=3,
-                target_km_per_day=30.0, max_km_per_day=25.0,
+                start_hut_id="finse",
+                days=3,
+                target_km_per_day=30.0,
+                max_km_per_day=25.0,
             )
 
     def test_max_below_target_rejected_with_only_max_set(self) -> None:
@@ -53,41 +55,70 @@ class TestPlanRequest:
             PlanRequest(start_hut_id="finse", days=3, max_km_per_day=5.0)
 
 
-
 class TestGreatCircleDistance:
     def test_zero_for_same_point(self) -> None:
         hut = Hut(
-            id="x", name="X", lat=60.0, lon=7.0,
-            elevation_m=1000, capacity=10, operator="test",
-            season_start_month=1, season_end_month=12,
+            id="x",
+            name="X",
+            lat=60.0,
+            lon=7.0,
+            elevation_m=1000,
+            capacity=10,
+            operator="test",
+            season_start_month=1,
+            season_end_month=12,
         )
         assert great_circle_km(hut, hut) == pytest.approx(0.0)
 
     def test_known_distance(self) -> None:
         # Finse to Haukeliseter is roughly 85 km as the crow flies
         finse = Hut(
-            id="finse", name="Finse", lat=60.6028, lon=7.5050,
-            elevation_m=1222, capacity=196, operator="private",
-            season_start_month=1, season_end_month=12,
+            id="finse",
+            name="Finse",
+            lat=60.6028,
+            lon=7.5050,
+            elevation_m=1222,
+            capacity=196,
+            operator="private",
+            season_start_month=1,
+            season_end_month=12,
         )
         haukeli = Hut(
-            id="haukeli", name="Haukeli", lat=59.8136, lon=7.4928,
-            elevation_m=990, capacity=180, operator="DNT",
-            season_start_month=1, season_end_month=12,
+            id="haukeli",
+            name="Haukeli",
+            lat=59.8136,
+            lon=7.4928,
+            elevation_m=990,
+            capacity=180,
+            operator="DNT",
+            season_start_month=1,
+            season_end_month=12,
         )
         # ~88 km — allow some slack since lat/lon coords are approximate
         assert 80.0 < great_circle_km(finse, haukeli) < 95.0
 
     def test_symmetric(self) -> None:
         a = Hut(
-            id="a", name="A", lat=60.0, lon=7.0,
-            elevation_m=1000, capacity=10, operator="test",
-            season_start_month=1, season_end_month=12,
+            id="a",
+            name="A",
+            lat=60.0,
+            lon=7.0,
+            elevation_m=1000,
+            capacity=10,
+            operator="test",
+            season_start_month=1,
+            season_end_month=12,
         )
         b = Hut(
-            id="b", name="B", lat=61.0, lon=8.0,
-            elevation_m=1000, capacity=10, operator="test",
-            season_start_month=1, season_end_month=12,
+            id="b",
+            name="B",
+            lat=61.0,
+            lon=8.0,
+            elevation_m=1000,
+            capacity=10,
+            operator="test",
+            season_start_month=1,
+            season_end_month=12,
         )
         assert great_circle_km(a, b) == pytest.approx(great_circle_km(b, a))
 
@@ -100,21 +131,15 @@ class TestPlannerBasic:
         assert trip.days[0].start_hut.id == "a"
 
     def test_two_day_plan_with_goal(self, tiny_planner: AStarPlanner) -> None:
-        trip = tiny_planner.plan(
-            PlanRequest(start_hut_id="a", days=2, goal_hut_id="c")
-        )
+        trip = tiny_planner.plan(PlanRequest(start_hut_id="a", days=2, goal_hut_id="c"))
         assert len(trip.days) == 2
         assert trip.days[0].start_hut.id == "a"
         assert trip.days[-1].end_hut.id == "c"
 
-    def test_two_day_plan_prefers_cheaper_path(
-        self, tiny_planner: AStarPlanner
-    ) -> None:
+    def test_two_day_plan_prefers_cheaper_path(self, tiny_planner: AStarPlanner) -> None:
         """A→C direct is 25 km/200m. A→B→C is 10+10=20 km/200m.
         Over 2 days, A→B→C is cheaper. Planner should prefer it."""
-        trip = tiny_planner.plan(
-            PlanRequest(start_hut_id="a", days=2, goal_hut_id="c")
-        )
+        trip = tiny_planner.plan(PlanRequest(start_hut_id="a", days=2, goal_hut_id="c"))
         # Should go A → B → C
         path_ids = [trip.days[0].start_hut.id, trip.days[0].end_hut.id, trip.days[1].end_hut.id]
         assert path_ids == ["a", "b", "c"]
@@ -142,9 +167,7 @@ class TestPlannerConstraints:
     def test_unreachable_goal_raises(self, tiny_planner: AStarPlanner) -> None:
         # In 1 day, A can't reach D (no direct edge)
         with pytest.raises(PlanningError):
-            tiny_planner.plan(
-                PlanRequest(start_hut_id="a", days=1, goal_hut_id="d")
-            )
+            tiny_planner.plan(PlanRequest(start_hut_id="a", days=1, goal_hut_id="d"))
 
     def test_unknown_start_raises(self, tiny_planner: AStarPlanner) -> None:
         with pytest.raises(KeyError, match="Unknown hut"):
@@ -175,9 +198,7 @@ class TestPlannerProperties:
 
     @given(days=st.integers(min_value=1, max_value=4))
     @settings(suppress_health_check=[HealthCheck.function_scoped_fixture], deadline=None)
-    def test_trip_length_matches_request(
-        self, tiny_planner: AStarPlanner, days: int
-    ) -> None:
+    def test_trip_length_matches_request(self, tiny_planner: AStarPlanner, days: int) -> None:
         """A successful plan always has exactly `days` legs."""
         try:
             trip = tiny_planner.plan(PlanRequest(start_hut_id="a", days=days))
@@ -187,9 +208,7 @@ class TestPlannerProperties:
 
     @given(days=st.integers(min_value=1, max_value=4))
     @settings(suppress_health_check=[HealthCheck.function_scoped_fixture], deadline=None)
-    def test_trip_is_continuous(
-        self, tiny_planner: AStarPlanner, days: int
-    ) -> None:
+    def test_trip_is_continuous(self, tiny_planner: AStarPlanner, days: int) -> None:
         """Each day starts where the previous day ended."""
         try:
             trip = tiny_planner.plan(PlanRequest(start_hut_id="a", days=days))

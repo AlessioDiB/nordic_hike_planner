@@ -29,9 +29,12 @@ class TestPlanCommand:
         result = runner.invoke(
             app,
             [
-                "--start", "finse",
-                "--days", "5",
-                "--goal", "haukeliseter",
+                "--start",
+                "finse",
+                "--days",
+                "5",
+                "--goal",
+                "haukeliseter",
                 *HARDANGERVIDDA_ARGS,
             ],
         )
@@ -58,9 +61,14 @@ class TestPlanCommand:
         result = runner.invoke(
             app,
             [
-                "--start", "finse", "--days", "3",
-                "--max-km", "10",
-                "--target-km", "20",
+                "--start",
+                "finse",
+                "--days",
+                "3",
+                "--max-km",
+                "10",
+                "--target-km",
+                "20",
                 *HARDANGERVIDDA_ARGS,
             ],
         )
@@ -68,9 +76,7 @@ class TestPlanCommand:
         assert result.exit_code == 2
         assert "Invalid request" in result.stderr
 
-    def test_missing_data_file_fails_cleanly(
-        self, runner: CliRunner, tmp_path: Path
-    ) -> None:
+    def test_missing_data_file_fails_cleanly(self, runner: CliRunner, tmp_path: Path) -> None:
         missing = tmp_path / "nope.json"
         result = runner.invoke(
             app,
