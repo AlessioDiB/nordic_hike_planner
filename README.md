@@ -2,29 +2,36 @@
 
 [![CI](https://github.com/AlessioDiB/nordic_hike_planner/actions/workflows/ci.yml/badge.svg)](https://github.com/AlessioDiB/nordic_hike_planner/actions/workflows/ci.yml)
 > A multi-day hut-to-hut trip planner for the Norwegian and Swedish mountains.
-> Given a starting hut and a number of days, it works out the best path through
-> the Hardangervidda plateau using A\* graph search and Naismith's rule for
-> walking-time estimates.
+> Tell it where you're starting and how many days you have. It picks the best
+> path through the Hardangervidda plateau, using A\* graph search and a hiking
+> rule from 1892. Yes, 1892. Walking hasn't changed much.
 
 ---
 
 ## Why this exists
 
-I've been planning to do a Nordic hut traverse for years. The map is on my wall;
-the trip keeps slipping. When this came up as a "have fun" assignment, I
-took it as an excuse to build the planning tool I keep wishing existed —
-something that takes a starting point, a number of days, and produces a
-sensible plan over real terrain.
+The brief for this assignment was, in full: *"Have fun."*
 
-Hardangervidda is Norway's largest mountain plateau and the heart of the DNT
-hut network. I curated a small dataset of 12 huts in the region and built
-the planner around it.
+That's it. No spec, no problem statement, no "build a banking thing." Just
+have fun.
+
+I'd been planning a Nordic hut traverse for about three years. The map is on
+my wall. The trip keeps slipping because life happens and weather happens and
+nobody's ever planned a trip without saying "let's do it next year." So when
+"have fun" arrived in my inbox, I took it as cosmic permission to finally
+build the tool I keep wishing existed.
+
+The result is this: give it a starting hut and a number of days, and it works
+out a sensible route through Hardangervidda — Norway's largest mountain
+plateau and the spiritual home of the DNT hut network. I hand-curated a
+dataset of 12 real huts in the region (yes, the coordinates are real; yes,
+the trails are real; no, you should not actually use this for real trip
+planning without checking weather and hut availability — see the
+*Limitations* section if you enjoy being disappointed).
 
 ---
 
 ## What it does
-
-A small command-line tool and HTTP API for planning multi-day hiking trips:
 
 ```text
 $ nordic-hike --start finse --days 5 --goal haukeliseter
@@ -45,7 +52,10 @@ $ nordic-hike --start finse --days 5 --goal haukeliseter
 ```
 
 The same planner is also exposed as an HTTP service via FastAPI, so the CLI
-and the API share exactly the same implementation.
+and the API share exactly the same implementation. (Which is good. Two
+implementations of the same logic is one of the few mistakes worse than
+*no* implementation.)
+
 ---
 
 ## How to run it
@@ -62,17 +72,17 @@ uvicorn nordic_hike_planner.api:app --port 8000
 # Then open http://localhost:8000/docs for the interactive Swagger UI
 ```
 
-To run the test suite, lint, type-checks, and pytest in one go:
+To run lint, type-checks, and tests in one go:
 
 ```bash
 # On Linux / macOS:
 make check
 
-# On Windows (or anywhere Python is installed):
+# On Windows:
 python check.py
 ```
 
-The Docker image can be built with:
+Docker:
 
 ```bash
 docker build -t nordic-hike-planner .
@@ -90,24 +100,25 @@ between two huts is an edge weighted by distance and elevation gain. Finding
 a good multi-day trip is the same as finding a low-cost path of the right
 length through this graph.
 
-I used **A\* search** with **great-circle distance as the heuristic**.
-A\* is provably optimal when the heuristic never overestimates the true cost
-(an *admissible* heuristic), and great-circle distance is admissible here
-because no walking route can be shorter than a straight line on the Earth's
-surface. In practice this means A\* explores far fewer paths than Dijkstra
-would, without sacrificing optimality.
+I used **A\* search** with **great-circle distance as the heuristic**. A\* is
+provably optimal when the heuristic never overestimates the true cost (an
+*admissible* heuristic), and great-circle distance is admissible here because
+no walking route can be shorter than a straight line on the Earth's surface.
+In practice this means A\* explores far fewer paths than Dijkstra would,
+without sacrificing optimality.
 
-When the user doesn't specify a goal hut, A\* gracefully degrades to Dijkstra —
-the heuristic returns 0 and the search bounds itself by trip length.
+When the user doesn't specify a goal hut, A\* gracefully degrades to Dijkstra
+— the heuristic returns 0 and the search bounds itself by trip length.
 
 ### Walking time: Naismith's rule
 
 Time estimates come from **Naismith's rule** (William Naismith, 1892):
 *allow one hour per 5 km of horizontal distance, plus one hour per 600 m of
 ascent*. It's the rule most Nordic guidebooks still use. There are more
-sophisticated alternatives (Tobler, Langmuir), but Naismith is what
-hikers actually recognise, and the differences are smaller than other
-sources of uncertainty in route planning.
+sophisticated alternatives (Tobler, Langmuir), but Naismith is what hikers
+actually recognise, and the differences are smaller than other sources of
+uncertainty in route planning. Also, naming things after Victorian
+mountaineers is just the right kind of fun.
 
 ### Cost function
 
@@ -162,35 +173,35 @@ A few design choices worth flagging:
 
 ## Limitations and simplifications
 
-A few things I deliberately did *not* do, and why:
+A non-exhaustive list of things this planner won't do for you, and which
+will become abundantly clear if you try to use it for an actual trip:
 
-- **Hand-curated dataset, not scraped or OSM-derived.** I considered scraping
-  DNT's website and using OpenStreetMap's Overpass API, but for a one-week
-  project the value-per-hour was better spent on the routing logic and the
-  engineering hygiene than on data plumbing. The data layer is abstracted
-  behind the `HutRepository` interface, so swapping the source later is
-  straightforward.
-- **Elevation gain modelled as symmetric per edge.** Walking A→B and B→A
-  are modelled with the same elevation gain. This is wrong in principle —
-  one direction is mostly ascent, the other mostly descent. But Naismith's
-  rule only counts ascent, so the practical impact is that we overestimate
-  walking time on descent legs. For Hardangervidda's gentle plateau terrain
-  this is acceptable; for steeper regions (Jotunheimen, the Lyngen Alps)
-  I'd model directional ascent properly.
-- **No hut availability, no weather.** Real trip planning needs to check
-  whether huts are open in the chosen month and whether the weather is
-  walkable. I've left both as future work.
-- **One hut per day.** Each day is one edge in the graph. Some real
-  traverses combine multiple short legs into one day — the model doesn't
-  currently support that.
+- **The dataset is hand-curated, not scraped.** I considered scraping DNT's
+  website and using OpenStreetMap's Overpass API, but for a one-week
+  project the value-per-hour was better spent on the routing logic than
+  on data plumbing. The data layer is abstracted behind the
+  `HutRepository` interface, so swapping the source later is one new
+  class, not a rewrite. (Twelve huts. It's not exactly Wikipedia.)
+- **Elevation is symmetric per edge.** Walking A→B and B→A use the same
+  ascent value, which is wrong in principle — one direction is mostly up,
+  the other mostly down. Naismith only counts ascent, so the practical
+  effect is that descents get over-estimated. For Hardangervidda's gentle
+  plateau this is fine. For Jotunheimen or the Lyngen Alps, I'd fix it.
+- **No hut availability. No weather. No bear warnings.** Real trip planning
+  needs all of these. If you arrive at Kjeldebu in January and it's closed
+  and snowing, this tool will offer no comfort.
+- **One hut per day.** Each day is exactly one edge in the graph. Real
+  traversers sometimes combine two short legs into one day; this planner
+  doesn't.
 - **No web UI.** I considered an HTMX-based interactive view, but judged
   the engineering-per-hour was better spent on the planner, the API, and
   test coverage. The FastAPI service exposes a Swagger UI at `/docs` which
-  is enough for a portfolio piece.
-- **Dockerfile not test-built locally.** I don't have Docker installed on
-  my dev machine (Windows). The GitHub Actions CI builds the image on
-  every push and smoke-tests it against `/health`, so the build is
-  verified — just not by me, locally.
+  is enough for a project of this size.
+- **Dockerfile not built locally.** No Docker installed on my dev machine
+  (Windows; long story; mostly involves WSL2 and a missed Saturday).
+  The GitHub Actions CI builds the image on every push and smoke-tests it
+  against `/health`, so the build is verified — just not by me, in person,
+  with my own eyes.
 
 ---
 
@@ -198,16 +209,17 @@ A few things I deliberately did *not* do, and why:
 
 With another week or two:
 
-- **Hut availability and seasonal awareness** — refuse to plan a January
-  trip through summer-only huts, integrate with DNT's booking calendar.
-- **Multi-region datasets** — Jotunheimen, Rondane, Sarek (Sweden) using
-  a shared `HutRepository` interface. The infrastructure is already there.
-- **Directional elevation** — separate ascent for each direction of an
-  edge, with Langmuir's correction for steep descent.
-- **A small HTMX front-end** — server-rendered, no SPA. The JD called this
-  out and I'd like to see what it feels like in practice.
-- **A simple GeoJSON export** so the plan can be loaded into any map
-  viewer.
+- **Hut availability and seasonal awareness.** Refuse to plan a January
+  trip through summer-only huts. Eventually integrate with DNT's booking
+  calendar.
+- **More regions.** Jotunheimen, Rondane, Sarek. The `HutRepository`
+  interface is already there for it.
+- **Directional elevation.** Real ascent per direction, with Langmuir's
+  correction for steep descent.
+- **A small HTMX front-end.** Server-rendered, no SPA. The JD called this
+  out and I'd genuinely like to see what it feels like.
+- **GeoJSON export** so the plan can be opened in any map viewer. This is
+  the actual feature I'd build first.
 
 ---
 
@@ -223,7 +235,8 @@ With another week or two:
 
 ---
 
-Thanks for reading this far. If you'd like to talk it through or have
-questions about any of the decisions, I'd love to chat.
+Thanks for reading this far. If you'd like to talk it through, dig into any
+of the decisions, or just argue about whether Naismith's rule is too
+optimistic for unfit Italians (it is), I'd love to chat.
 
 — Alessio
