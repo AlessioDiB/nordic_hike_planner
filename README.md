@@ -29,6 +29,17 @@ the trails are real; no, you should not actually use this for real trip
 planning without checking weather and hut availability — see the
 *Limitations* section if you enjoy being disappointed).
 
+Due to the current pandemic of vibecoders believing to be
+the next reincarnation of Bill Gates and Steve Jobs, a mention of how and
+where AI has been used, is due. This will allow the project to be fully
+transparent and honest.
+The followings have been created and/or heavily supported by use of AI:
+- Creation of testing Python files, in tests folder.
+- The acquisition of real hiking data from databases. More specifically, from open source Norway-based databases.
+- Addition of code comments. Due to tight deadlines, an LLM has been asked to analyze the code I created.
+- Grammar checks and spelling correction of this README file.
+- Debugging few but very stubborns and difficult issues.
+
 ---
 
 ## What it does
